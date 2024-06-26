@@ -29,4 +29,35 @@ public class RequestHandlerTest {
 		String response = out.toString();
 		assertTrue(response.contains("HTTP/1.1 200 OK"));
 	}
+	@Test
+	public void request_POST() throws Exception {
+		InputStream in = new FileInputStream(new File(testDirectory + "Http_POST.txt"));
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+		Socket mockSocket = Mockito.mock(Socket.class);
+		Mockito.when(mockSocket.getInputStream()).thenReturn(in);
+		Mockito.when(mockSocket.getOutputStream()).thenReturn(out);
+
+		RequestHandler requestHandler = new RequestHandler(mockSocket);
+		requestHandler.run();
+
+		String response = out.toString();
+		assertTrue(response.contains("HTTP/1.1 302 Redirect OK"));
+	}
+
+	@Test
+	public void request_Login() throws Exception {
+		InputStream in = new FileInputStream(new File(testDirectory + "Http_Login.txt"));
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+		Socket mockSocket = Mockito.mock(Socket.class);
+		Mockito.when(mockSocket.getInputStream()).thenReturn(in);
+		Mockito.when(mockSocket.getOutputStream()).thenReturn(out);
+
+		RequestHandler requestHandler = new RequestHandler(mockSocket);
+		requestHandler.run();
+		
+		String response = out.toString();
+		assertTrue(response.contains("HTTP/1.1 302 Redirect OK") || response.contains("HTTP/1.1 200 OK"));
+	}
 }
